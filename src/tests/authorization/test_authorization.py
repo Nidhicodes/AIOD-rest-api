@@ -419,7 +419,10 @@ def test_user_can_always_delete_asset(status: EntryStatus, publication, client):
             f"/publications/{identifier}",
             headers={"Authorization": "Fake token"},
         )
-        assert response.status_code == HTTPStatus.OK, response.json()
+        if status == EntryStatus.SUBMITTED:
+            assert response.status_code == HTTPStatus.FORBIDDEN, response.json()
+        else:
+            assert response.status_code == HTTPStatus.OK, response.json()
 
 
 def test_user_can_edit_asset_in_draft(publication, client):
